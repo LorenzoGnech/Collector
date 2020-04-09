@@ -42,7 +42,6 @@ public class GridController : MonoBehaviour
         grid.horizontalOffset += room.transform.localPosition.x;
         for(int y=0; y<grid.rows; y++){
             for(int x=0; x<grid.columns; x++){
-                Debug.Log("Entro nel ciclo!");
                 GameObject go = Instantiate(gridTile, transform);
                 go.transform.position = new Vector2(x - (grid.columns - grid.horizontalOffset), y - (grid.rows - grid.verticalOffset));
                 go.name = "X = " + x + " - Y = " + y;

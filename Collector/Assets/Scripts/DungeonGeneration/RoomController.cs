@@ -77,8 +77,6 @@ public class RoomController : MonoBehaviour
     }
 
     public void RemoveDoors(){
-        Debug.Log("Rimuovo le stanze");
-        Debug.Log(loadedRooms.Count);
         foreach(Room r in loadedRooms){
             r.RemoveUnconnectedDoors();
         }
@@ -142,7 +140,6 @@ public class RoomController : MonoBehaviour
         CameraController.instance.currentRoom = room;
         currRoom = room;
         UpdateRooms();
-        Debug.Log("AGGIORNO");
     }
 
     private void UpdateRooms(){
