@@ -21,6 +21,7 @@ public class Room : MonoBehaviour
     public Door topDoor;
     public Door bottomDoor;
     public List<Door> doors = new List<Door>();
+    private Transform sideWalls; 
     // Start is called before the first frame update
     void Start()
     {
@@ -46,33 +47,53 @@ public class Room : MonoBehaviour
                     break;
             }
         }
+        foreach(Transform child in transform){
+            if(child.name == "SideWall"){
+                sideWalls = child;
+            }
+        }
         RoomController.instance.RegisterRoom(this);
     }
 
-
+    private void FixWalls(string name){
+        foreach(Transform child in sideWalls){  
+            if(child.name == name){
+                foreach(Transform child2 in child){
+                    if(child2.tag == "HalfWall"){
+                        child2.gameObject.SetActive(false);
+                    } else if(child2.tag == "Wall"){
+                        child2.gameObject.SetActive(true);
+                    }
+                }
+            }
+        }                 
+    }
 
     public void RemoveUnconnectedDoors(){
-        Debug.Log("Rimuovo porte di " + X + " "+ Y);
         foreach(Door d in doors){
             switch(d.doorType){
                 case Door.DoorType.right:
                     if(GetRight() == null){
                         d.gameObject.SetActive(false);
+                        FixWalls("RightWall");
                     }
                     break;
                 case Door.DoorType.left:
                     if(GetLeft() == null){
                         d.gameObject.SetActive(false);
+                        FixWalls("LeftWall");
                     }
                     break;
                 case Door.DoorType.top:
                     if(GetTop() == null){
                         d.gameObject.SetActive(false);
+                        FixWalls("TopWall");
                     }
                     break;
                 case Door.DoorType.bottom:
                     if(GetBottom() == null){
                         d.gameObject.SetActive(false);
+                        FixWalls("BottomWall");
                     }
                     break;
             }
