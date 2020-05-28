@@ -118,6 +118,7 @@ public class EnemyController : MonoBehaviour
     }
 
     public void Death(){
+        RoomController.instance.UpdateRooms();
         Destroy(gameObject);
     }
 

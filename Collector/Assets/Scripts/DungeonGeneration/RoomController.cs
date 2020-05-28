@@ -32,6 +32,14 @@ public class RoomController : MonoBehaviour
         instance = this;
     }
 
+    void PrintRooms(){
+        string s = "";
+        foreach(Room r in loadedRooms){
+            s = s + ("[" + r.X + "][" + r.Y + "], ");
+        }
+        Debug.Log(s);
+    }
+
     public void LoadRoom(string name, int x, int y){
         if(DoesRoomExist(x, y)){
             return;
@@ -76,7 +84,9 @@ public class RoomController : MonoBehaviour
         }
     }
 
-    public void RemoveDoors(){
+    IEnumerator RemoveDoors(){
+        yield return new WaitForSeconds(0.5f);
+        PrintRooms();
         foreach(Room r in loadedRooms){
             r.RemoveUnconnectedDoors();
         }
@@ -88,8 +98,14 @@ public class RoomController : MonoBehaviour
         UpdateRoomQueue();
         if(!deletedDoors && loadRoomQueue.Count == 0 && !(loadedRooms.Count == 0)){
             UpdateRooms();
-            RemoveDoors();
+            StartCoroutine(RemoveDoors());
             deletedDoors = true;
+        }
+        if(currRoom != null && currRoom.locked){
+            EnemyController[] currEnemies = currRoom.GetComponentsInChildren<EnemyController>();
+            if(currEnemies.Length < 1){
+                currRoom.UnlockDoors();
+            }
         }
     }
 
@@ -142,7 +158,7 @@ public class RoomController : MonoBehaviour
         UpdateRooms();
     }
 
-    private void UpdateRooms(){
+    public void UpdateRooms(){
         foreach(Room room in loadedRooms){
             if(currRoom != room){
                 EnemyController[] enemies = room.GetComponentsInChildren<EnemyController>();
@@ -154,6 +170,8 @@ public class RoomController : MonoBehaviour
             } else{
                 EnemyController[] enemies = room.GetComponentsInChildren<EnemyController>();
                 if(enemies.Length > 0){
+                    Debug.Log("Ci sono nemici nella stanza attuale!");
+                    room.LockDoors();
                     foreach(EnemyController enemy in enemies){
                         enemy.notInRoom = false;
                     }

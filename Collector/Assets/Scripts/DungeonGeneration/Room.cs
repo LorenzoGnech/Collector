@@ -9,6 +9,7 @@ public class Room : MonoBehaviour
     public int Height;
     public int X;
     public int Y;
+    public bool locked = true;
     private bool updatedDoors = false;
 
     public Room(int x, int y){
@@ -75,6 +76,7 @@ public class Room : MonoBehaviour
                 case Door.DoorType.right:
                     if(GetRight() == null){
                         d.gameObject.SetActive(false);
+                        //Debug.Log("Rimosso destra " + X + " - " + Y);
                         FixWalls("RightWall");
                     }
                     break;
@@ -82,17 +84,20 @@ public class Room : MonoBehaviour
                     if(GetLeft() == null){
                         d.gameObject.SetActive(false);
                         FixWalls("LeftWall");
+                        //Debug.Log("Rimosso sinistra " + X + " - " + Y);
                     }
                     break;
                 case Door.DoorType.top:
                     if(GetTop() == null){
                         d.gameObject.SetActive(false);
+                        //Debug.Log("Rimosso sopra " + X + " - " + Y);
                         FixWalls("TopWall");
                     }
                     break;
                 case Door.DoorType.bottom:
                     if(GetBottom() == null){
                         d.gameObject.SetActive(false);
+                        //Debug.Log("Rimosso sotto " + X + " - " + Y);
                         FixWalls("BottomWall");
                     }
                     break;
@@ -149,6 +154,22 @@ public class Room : MonoBehaviour
      void OnTriggerEnter2D(Collider2D other) {
         if(other.tag == "Player"){
             RoomController.instance.OnPlayerEnterRoom(this);
+        }
+    }
+
+    public void UnlockDoors(){
+        locked = false;
+        Debug.Log("Sblocco porte " + X + " " + Y);
+        foreach(Door door in doors){
+            door.Unlock();
+        }
+    }
+
+    public void LockDoors(){
+        locked = true;
+        Debug.Log("Blocco porte " + X + " " + Y);
+        foreach(Door door in doors){
+            door.Lock();
         }
     }
 }
